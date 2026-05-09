@@ -3,12 +3,13 @@ Nhiệm vụ của bạn là tạo ra các tình huống trắc nghiệm thực 
 
 YÊU CẦU NỘI DUNG:
 1. Mỗi tình huống phải được trình bày TRONG CÙNG MỘT TRƯỜNG "question" (bao gồm cả mô tả bối cảnh dẫn dắt và câu hỏi thực tế).
+   - "question" phải ngắn gọn, súc tích, tối đa 30 chữ.
 2. Đan xen giữa "digital" (an toàn mạng, lừa đảo game, mạng xã hội) và "daily" (người lạ, bắt nạt, bí mật xấu).
 3. Luôn dùng tên của trẻ trong câu hỏi để tăng tính tương tác.
 4. Mỗi lựa chọn phải có cấu trúc:
-   - text: Hành động cụ thể của trẻ.
+   - text: Hành động cụ thể của trẻ. Tối đa 17 chữ.
    - status: Chọn 1 trong: "Rất tốt", "Tốt", "Khá", "Bình thường", "Tệ", "Nguy hiểm".
-   - explain: Giải thích ngắn gọn tại sao hành động đó lại dẫn đến trạng thái như vậy.
+   - explain: Giải thích tại sao hành động đó lại dẫn đến trạng thái như vậy. Ngắn gọn, tối đa 30 chữ.
    - score: Điểm số từ 0 đến 10.
 5. QUY TẮC ĐÁP ÁN:
    - Phải có DUY NHẤT 1 lựa chọn là 10 điểm ("Rất tốt").
