@@ -40,7 +40,10 @@ Thông tin này được dùng để điều chỉnh:
 
    * Mô tả ngắn
    * 1 câu hỏi
-   * 3–4 lựa chọn
+   * 4 lựa chọn
+   * Mỗi lựa chọn bao gồm:
+     * **Trạng thái tương đối:** (Ví dụ: Rất tốt, Tốt, Tệ, Nguy hiểm...)
+     * **Giải thích:** Lý do tại sao lựa chọn này lại có trạng thái như vậy.
    * Chỉ chọn 1 lần
 3. Có yếu tố gamification để tăng engagement.
 4. Sau khi hoàn thành:
@@ -89,9 +92,10 @@ Phụ huynh xem báo cáo ngay trên web sau khi kết thúc.
 
 Con sẽ làm gì?
 
-A. Gửi số điện thoại
-B. Không trả lời và nói với ba mẹ
-C. Hỏi thêm xem họ là ai
+A. **Gửi số điện thoại** (Nguy hiểm: Tiết lộ thông tin cá nhân cho người lạ có thể dẫn đến lừa đảo hoặc quấy rối).
+B. **Không trả lời và nói với ba mẹ** (Rất tốt: Bảo vệ thông tin cá nhân và tìm sự trợ giúp từ người lớn ngay lập tức).
+C. **Hỏi thêm xem họ là ai** (Tệ: Tiếp tục giao tiếp với người lạ làm tăng rủi ro bị thao túng hoặc lừa đảo).
+D. **Chặn người đó và báo cáo vi phạm** (Tốt: Chấm dứt sự tiếp cận của người lạ và giúp hệ thống loại bỏ kẻ xấu).
 
 ---
 
@@ -99,9 +103,10 @@ C. Hỏi thêm xem họ là ai
 
 > Một bạn trong lớp yêu cầu con giữ bí mật một việc khiến con thấy lo lắng.
 
-A. Giữ bí mật
-B. Nói với người lớn con tin tưởng
-C. Tránh mặt bạn đó
+A. **Giữ bí mật** (Tệ: Một bí mật khiến con lo lắng thường là dấu hiệu của điều không ổn, không nên giữ một mình).
+B. **Nói với người lớn con tin tưởng** (Rất tốt: Luôn chia sẻ những điều khiến con bất an với ba mẹ hoặc thầy cô).
+C. **Tránh mặt bạn đó** (Bình thường: Chỉ là giải pháp tạm thời, không giải quyết được gốc rễ vấn đề lo lắng).
+D. **Hỏi rõ bạn đó tại sao phải giữ bí mật** (Khá: Thể hiện sự chủ động nhưng vẫn nên chia sẻ với người lớn nếu cảm thấy lo lắng).
 
 ---
 
