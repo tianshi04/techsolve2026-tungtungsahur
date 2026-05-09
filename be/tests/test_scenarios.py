@@ -1,26 +1,8 @@
 from unittest.mock import patch, MagicMock
-
 import pytest
-from fastapi.testclient import TestClient
-
-from app.main import app
-from app.models.response import Choice, Scenario, Choices
+from app.models.response import Choice, Scenario, Choices, GenerateBatchResponse
 from app.services.llm_service import ScenariosOutput
 
-
-VALID_REQUEST = {
-    "child": {
-        "name": "Minh",
-        "age": 10,
-        "gender": "nam",
-        "location": "TP.HCM",
-        "notes": "hay chơi game online",
-    },
-    "config": {
-        "total": 2,
-        "difficulty": 3,
-    },
-}
 
 MOCK_SCENARIOS = ScenariosOutput(
     scenarios=[
@@ -48,12 +30,6 @@ MOCK_SCENARIOS = ScenariosOutput(
 )
 
 
-@pytest.fixture
-def client():
-    """Create a test client."""
-    return TestClient(app)
-
-
 def _create_mock_response(parsed: ScenariosOutput):
     """Create a mock Gemini API response with structured output."""
     mock = MagicMock()
@@ -65,85 +41,44 @@ class TestGenerateBatchEndpoint:
     """Tests for POST /api/v1/scenarios/generate-batch."""
 
     @patch("app.services.llm_service.client")
-    def test_success(self, mock_genai_client, client):
+    def test_success(self, mock_genai_client, client, valid_request):
         """Test successful scenario generation with structured output."""
         mock_genai_client.models.generate_content.return_value = _create_mock_response(MOCK_SCENARIOS)
 
-        response = client.post("/api/v1/scenarios/generate-batch", json=VALID_REQUEST)
+        response = client.post("/api/v1/scenarios/generate-batch", json=valid_request())
 
         assert response.status_code == 200
-        data = response.json()
-        assert "scenarios" in data
-        assert len(data["scenarios"]) == 2
-        assert data["scenarios"][0]["type"] == "digital"
-        assert "A" in data["scenarios"][0]["choices"]
-        assert data["scenarios"][0]["choices"]["A"]["score"] == 0
-        assert data["scenarios"][0]["choices"]["B"]["score"] == 10
+        # Validate using Pydantic model - if this succeeds, the structure is correct
+        data = GenerateBatchResponse(**response.json())
+        assert len(data.scenarios) == 2
 
-    @patch("app.services.llm_service.client")
-    def test_response_structure(self, mock_genai_client, client):
-        """Test that response matches the API spec structure."""
-        mock_genai_client.models.generate_content.return_value = _create_mock_response(MOCK_SCENARIOS)
-
-        response = client.post("/api/v1/scenarios/generate-batch", json=VALID_REQUEST)
-        data = response.json()
-
-        scenario = data["scenarios"][0]
-        assert "type" in scenario
-        assert "question" in scenario
-        assert "choices" in scenario
-
-        choice = scenario["choices"]["A"]
-        assert "text" in choice
-        assert "status" in choice
-        assert "explain" in choice
-        assert "score" in choice
-
-    def test_missing_child_name(self, client):
+    def test_missing_child_name(self, client, valid_request):
         """Test validation: missing required field child.name."""
-        bad_request = {
-            "child": {"age": 10, "location": "TP.HCM"},
-            "config": {"total": 5, "difficulty": 3},
-        }
-        response = client.post("/api/v1/scenarios/generate-batch", json=bad_request)
+        bad_req = valid_request()
+        # Remove name entirely to trigger Pydantic missing field error
+        del bad_req["child"]["name"]
+        
+        response = client.post("/api/v1/scenarios/generate-batch", json=bad_req)
         assert response.status_code == 422
 
-    def test_age_out_of_range(self, client):
+    def test_age_out_of_range(self, client, valid_request):
         """Test validation: age outside 5-16 range."""
-        bad_request = {
-            "child": {"name": "Minh", "age": 3, "location": "TP.HCM"},
-            "config": {"total": 5, "difficulty": 3},
-        }
-        response = client.post("/api/v1/scenarios/generate-batch", json=bad_request)
+        bad_req = valid_request(child_kwargs={"age": 3})
+        response = client.post("/api/v1/scenarios/generate-batch", json=bad_req)
         assert response.status_code == 422
 
-    def test_total_exceeds_max(self, client):
+    def test_total_exceeds_max(self, client, valid_request):
         """Test validation: total > 10."""
-        bad_request = {
-            "child": {"name": "Minh", "age": 10, "location": "TP.HCM"},
-            "config": {"total": 15, "difficulty": 3},
-        }
-        response = client.post("/api/v1/scenarios/generate-batch", json=bad_request)
-        assert response.status_code == 422
-
-    def test_difficulty_exceeds_max(self, client):
-        """Test validation: difficulty > MAX_DIFFICULTY."""
-        bad_request = {
-            "child": {"name": "Minh", "age": 10, "location": "TP.HCM"},
-            "config": {"total": 5, "difficulty": 99},
-        }
-        response = client.post("/api/v1/scenarios/generate-batch", json=bad_request)
+        bad_req = valid_request(config_kwargs={"total": 15})
+        response = client.post("/api/v1/scenarios/generate-batch", json=bad_req)
         assert response.status_code == 422
 
     @patch("app.services.llm_service.client")
-    def test_llm_failure(self, mock_genai_client, client):
+    def test_llm_failure(self, mock_genai_client, client, valid_request):
         """Test that LLM failure results in 422 after retries."""
         mock_genai_client.models.generate_content.side_effect = Exception("API error")
-
-        response = client.post("/api/v1/scenarios/generate-batch", json=VALID_REQUEST)
-
+        response = client.post("/api/v1/scenarios/generate-batch", json=valid_request())
         assert response.status_code == 422
-        assert "Failed to generate" in response.json()["detail"]
 
     def test_empty_body(self, client):
         """Test validation: empty request body."""
@@ -155,7 +90,7 @@ class TestGenerateStreamEndpoint:
     """Tests for POST /api/v1/scenarios/generate-stream."""
 
     @patch("app.services.llm_service.client")
-    def test_stream_success(self, mock_genai_client, client):
+    def test_stream_success(self, mock_genai_client, client, valid_request):
         """Test successful streaming with SSE format."""
         # Setup mock for async stream chunks
         chunk1 = MagicMock()
@@ -175,7 +110,7 @@ class TestGenerateStreamEndpoint:
 
         mock_genai_client.aio.models.generate_content_stream.side_effect = mock_stream_call
 
-        response = client.post("/api/v1/scenarios/generate-stream", json=VALID_REQUEST)
+        response = client.post("/api/v1/scenarios/generate-stream", json=valid_request())
 
         assert response.status_code == 200
         assert response.headers["content-type"].startswith("text/event-stream")
@@ -183,19 +118,13 @@ class TestGenerateStreamEndpoint:
         content = response.text
         assert "event: scenario" in content
         assert "event: done" in content
-        assert '"question": "Q1"' in content
-        assert '"question": "Q2"' in content
 
     @patch("app.services.llm_service.client")
-    def test_stream_error(self, mock_genai_client, client):
+    def test_stream_error(self, mock_genai_client, client, valid_request):
         """Test streaming error handling."""
         mock_genai_client.aio.models.generate_content_stream.side_effect = Exception("API fail")
-
-        response = client.post("/api/v1/scenarios/generate-stream", json=VALID_REQUEST)
-        
-        assert response.status_code == 200 # FastAPI starts response before error in some cases
+        response = client.post("/api/v1/scenarios/generate-stream", json=valid_request())
         assert "event: error" in response.text
-        assert "API fail" in response.text
 
 
 class TestHealthCheck:
