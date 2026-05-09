@@ -15,6 +15,7 @@ Sinh một **chuỗi nhiều tình huống** cùng lúc. Phù hợp khi muốn n
   "child": {
     "name": "Minh",
     "age": 10,
+    "gender": "nam",
     "location": "TP.HCM",
     "notes": "hay chơi game online"
   },
@@ -29,6 +30,7 @@ Sinh một **chuỗi nhiều tình huống** cùng lúc. Phù hợp khi muốn n
 |-------|------|----------|---------|
 | `child.name` | string | ✅ | Tên trẻ (để cá nhân hóa) |
 | `child.age` | integer | ✅ | Độ tuổi (5-16) |
+| `child.gender` | string | ❌ | Giới tính (`nam`, `nữ`, `khác`). Mặc định: `khác` |
 | `child.location` | string | ✅ | Địa điểm (ảnh hưởng bối cảnh) |
 | `child.notes` | string | ❌ | Thông tin bổ sung |
 | `config.total` | integer | ✅ | Số lượng câu hỏi (1-10) |
