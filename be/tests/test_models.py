@@ -9,9 +9,10 @@ from app.models.response import Choice, Scenario, GenerateBatchResponse, Choices
 
 class TestChildInfo:
     def test_valid(self):
-        child = ChildInfo(name="Minh", age=10, location="TP.HCM")
+        child = ChildInfo(name="Minh", age=10, gender="nam", location="TP.HCM")
         assert child.name == "Minh"
         assert child.age == 10
+        assert child.gender == "nam"
         assert child.location == "TP.HCM"
         assert child.notes is None
 

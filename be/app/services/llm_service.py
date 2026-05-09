@@ -35,6 +35,7 @@ async def generate_scenarios(request: GenerateBatchRequest) -> GenerateBatchResp
     user_message = build_user_message(
         name=request.child.name,
         age=request.child.age,
+        gender=request.child.gender,
         location=request.child.location,
         notes=request.child.notes,
         total=request.config.total,
@@ -122,6 +123,7 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
     user_message = build_user_message(
         name=request.child.name,
         age=request.child.age,
+        gender=request.child.gender,
         location=request.child.location,
         notes=request.child.notes,
         total=request.config.total,

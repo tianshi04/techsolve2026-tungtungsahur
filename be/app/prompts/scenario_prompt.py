@@ -29,6 +29,7 @@ PHẠM VI CHUYÊN MÔN:
 def build_user_message(
     name: str,
     age: int,
+    gender: str,
     location: str,
     notes: str | None,
     total: int,
@@ -44,6 +45,7 @@ def build_user_message(
 THÔNG TIN TRẺ:
 - Tên: {name}
 - Tuổi: {age}
+- Giới tính: {gender}
 - Địa điểm/Bối cảnh: {location}{notes_text}
 
 YÊU CẦU CỤ THỂ:

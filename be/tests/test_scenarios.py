@@ -12,6 +12,7 @@ VALID_REQUEST = {
     "child": {
         "name": "Minh",
         "age": 10,
+        "gender": "nam",
         "location": "TP.HCM",
         "notes": "hay chơi game online",
     },
