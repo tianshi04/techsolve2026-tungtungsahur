@@ -1,4 +1,5 @@
-# API Documentation - TungTungSahur
+# API Documentation — Bé Ứng Biến
+**Team: TungTungSahur**
 
 Hệ thống cung cấp hai phương thức chính để sinh các tình huống đánh giá kỹ năng bảo vệ bản thân cho trẻ em: **Batch** (trả về toàn bộ một lần) và **Stream** (trả về từng câu theo thời gian thực).
 

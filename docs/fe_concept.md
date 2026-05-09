@@ -1,4 +1,6 @@
-# AI Safety Adventure — Full Project Concept
+# Bé Ứng Biến — Full Project Concept
+**Team: TungTungSahur**
+**Project Context:** A web game using AI to help children practice real-life safety scenarios through interactive gameplay and instant feedback.
 
 > "Một web game tương tác dùng AI để giúp trẻ học cách xử lý các tình huống thực tế thông qua gameplay, phản hồi trực tiếp và hệ thống tính điểm."
 

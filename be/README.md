@@ -1,4 +1,4 @@
-# TungTungSahur — Backend API
+# Bé Ứng Biến — Backend API
 
 Backend API cho ứng dụng AI đánh giá kỹ năng bảo vệ bản thân cho trẻ em. Sử dụng Google Gemini để sinh chuỗi tình huống trắc nghiệm cá nhân hóa.
 

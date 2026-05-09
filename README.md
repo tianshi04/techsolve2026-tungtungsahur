@@ -1,6 +1,8 @@
-# TungTungSahur — AI-Powered Child Safety Assessment
+# Bé Ứng Biến — AI-Powered Child Safety Assessment
 
-**TungTungSahur** là một nền tảng web sử dụng trí tuệ nhân tạo (LLM) để tạo ra các tình huống trắc nghiệm cá nhân hóa, giúp trẻ em rèn luyện kỹ năng bảo vệ bản thân trong cả môi trường đời thực và không gian mạng.
+Phát triển bởi Team **TungTungSahur**
+
+**Bé Ứng Biến** là một nền tảng web sử dụng trí tuệ nhân tạo (LLM) để tạo ra các tình huống trắc nghiệm cá nhân hóa, giúp trẻ em rèn luyện kỹ năng bảo vệ bản thân trong cả môi trường đời thực và không gian mạng.
 
 ## 🚀 Giới thiệu dự án
 

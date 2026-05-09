@@ -1,3 +1,6 @@
+# Dự án: Bé Ứng Biến
+**Team: TungTungSahur**
+
 ## 📌 TÓM TẮT Ý TƯỞNG
 
 ### 🧠 Mô tả ngắn
