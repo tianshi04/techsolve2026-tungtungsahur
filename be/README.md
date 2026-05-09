@@ -63,6 +63,8 @@ Mở `.env` và điền API key:
 LLM_API_KEY=your-gemini-api-key
 LLM_MODEL=gemini-3-flash-preview
 MAX_DIFFICULTY=5
+HOST=127.0.0.1
+PORT=8000
 ```
 
 | Biến | Mô tả | Mặc định |
@@ -70,15 +72,20 @@ MAX_DIFFICULTY=5
 | `LLM_API_KEY` | Google Gemini API key | (bắt buộc) |
 | `LLM_MODEL` | Model Gemini | `gemini-3-flash-preview` |
 | `MAX_DIFFICULTY` | Độ khó tối đa cho tình huống | `5` |
-
-## Chạy server
+| `HOST` | Host để chạy server | `127.0.0.1` |
+| `PORT` | Port để chạy server | `8000` |
 
 **Sử dụng uv:**
 ```bash
-uv run uvicorn app.main:app --reload
+uv run python main.py
 ```
 
 **Sử dụng pip (sau khi đã activate venv):**
+```bash
+python main.py
+```
+
+*Hoặc chạy trực tiếp bằng uvicorn:*
 ```bash
 uvicorn app.main:app --reload
 ```
@@ -142,8 +149,9 @@ pytest -v
 be/
 ├── pyproject.toml
 ├── .env.example
+├── main.py                  # Entry point chính
 ├── app/
-│   ├── main.py              # FastAPI app
+│   ├── main.py              # FastAPI app definition
 │   ├── config.py            # Settings (.env)
 │   ├── models/
 │   │   ├── request.py       # Request validation
