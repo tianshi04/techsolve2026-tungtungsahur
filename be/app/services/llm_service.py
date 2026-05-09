@@ -10,7 +10,7 @@ from pydantic import BaseModel
 from app.config import settings
 from app.models.request import GenerateBatchRequest
 from app.models.response import GenerateBatchResponse, Scenario, Choice
-from app.prompts.scenario_prompt import build_prompt
+from app.prompts.scenario_prompt import SYSTEM_PROMPT, build_user_message
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +32,7 @@ async def generate_scenarios(request: GenerateBatchRequest) -> GenerateBatchResp
     Retries up to MAX_RETRIES times on failure.
     Raises HTTP 422 if all retries fail.
     """
-    prompt = build_prompt(
+    user_message = build_user_message(
         name=request.child.name,
         age=request.child.age,
         location=request.child.location,
@@ -49,8 +49,9 @@ async def generate_scenarios(request: GenerateBatchRequest) -> GenerateBatchResp
             logger.info(f"LLM call attempt {attempt}/{MAX_RETRIES}")
             response = client.models.generate_content(
                 model=settings.LLM_MODEL,
-                contents=prompt,
+                contents=user_message,
                 config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
                     response_mime_type="application/json",
                     response_schema=ScenariosOutput,
                 ),
@@ -115,7 +116,7 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
 
     Yields scenario objects as Server-Sent Events (SSE).
     """
-    prompt = build_prompt(
+    user_message = build_user_message(
         name=request.child.name,
         age=request.child.age,
         location=request.child.location,
@@ -130,8 +131,9 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
         # Use client.aio for true async streaming
         response = await client.aio.models.generate_content_stream(
             model=settings.LLM_MODEL,
-            contents=prompt,
+            contents=user_message,
             config=types.GenerateContentConfig(
+                system_instruction=SYSTEM_PROMPT,
                 response_mime_type="application/json",
                 response_schema=ScenariosOutput,
             ),
