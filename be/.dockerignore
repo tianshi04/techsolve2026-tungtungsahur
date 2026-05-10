@@ -1,0 +1,19 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv
+.pytest_cache
+.python-version
+
+# Project
+tests/
+docs/
+README.md
+
+# Let's keep it simple.
