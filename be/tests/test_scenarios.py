@@ -1,5 +1,4 @@
 from unittest.mock import patch, MagicMock
-import pytest
 from app.models.response import Choice, Scenario, Choices, GenerateBatchResponse
 from app.services.llm_service import ScenariosOutput
 
@@ -10,20 +9,60 @@ MOCK_SCENARIOS = ScenariosOutput(
             type="digital",
             question="Một người lạ trong game online nhắn tin cho Minh. Minh sẽ làm gì?",
             choices=Choices(
-                A=Choice(text="Gửi số điện thoại", status="Nguy hiểm", explain="Tiết lộ thông tin cá nhân", score=0),
-                B=Choice(text="Nói với ba mẹ", status="Rất tốt", explain="Tìm sự trợ giúp", score=10),
-                C=Choice(text="Hỏi thêm", status="Tệ", explain="Tiếp tục nói chuyện nguy hiểm", score=2),
-                D=Choice(text="Chặn và báo cáo", status="Tốt", explain="Chấm dứt tiếp cận", score=7),
+                A=Choice(
+                    text="Gửi số điện thoại",
+                    status="Nguy hiểm",
+                    explain="Tiết lộ thông tin cá nhân",
+                    score=0,
+                ),
+                B=Choice(
+                    text="Nói với ba mẹ",
+                    status="Rất tốt",
+                    explain="Tìm sự trợ giúp",
+                    score=10,
+                ),
+                C=Choice(
+                    text="Hỏi thêm",
+                    status="Tệ",
+                    explain="Tiếp tục nói chuyện nguy hiểm",
+                    score=2,
+                ),
+                D=Choice(
+                    text="Chặn và báo cáo",
+                    status="Tốt",
+                    explain="Chấm dứt tiếp cận",
+                    score=7,
+                ),
             ),
         ),
         Scenario(
             type="daily",
             question="Một người lạ hỏi đường và muốn Minh dẫn đi. Minh sẽ làm gì?",
             choices=Choices(
-                A=Choice(text="Dẫn người đó đi", status="Nguy hiểm", explain="Đi theo người lạ rất nguy hiểm", score=0),
-                B=Choice(text="Từ chối và đi về", status="Rất tốt", explain="Giữ khoảng cách an toàn", score=10),
-                C=Choice(text="Chỉ đường bằng lời", status="Tốt", explain="Giúp đỡ nhưng giữ khoảng cách", score=7),
-                D=Choice(text="Gọi điện cho ba mẹ", status="Tốt", explain="Nhờ người lớn hỗ trợ", score=8),
+                A=Choice(
+                    text="Dẫn người đó đi",
+                    status="Nguy hiểm",
+                    explain="Đi theo người lạ rất nguy hiểm",
+                    score=0,
+                ),
+                B=Choice(
+                    text="Từ chối và đi về",
+                    status="Rất tốt",
+                    explain="Giữ khoảng cách an toàn",
+                    score=10,
+                ),
+                C=Choice(
+                    text="Chỉ đường bằng lời",
+                    status="Tốt",
+                    explain="Giúp đỡ nhưng giữ khoảng cách",
+                    score=7,
+                ),
+                D=Choice(
+                    text="Gọi điện cho ba mẹ",
+                    status="Tốt",
+                    explain="Nhờ người lớn hỗ trợ",
+                    score=8,
+                ),
             ),
         ),
     ]
@@ -43,7 +82,9 @@ class TestGenerateBatchEndpoint:
     @patch("app.services.llm_service.client")
     def test_success(self, mock_genai_client, client, valid_request):
         """Test successful scenario generation with structured output."""
-        mock_genai_client.models.generate_content.return_value = _create_mock_response(MOCK_SCENARIOS)
+        mock_genai_client.models.generate_content.return_value = _create_mock_response(
+            MOCK_SCENARIOS
+        )
 
         response = client.post("/api/v1/scenarios/generate-batch", json=valid_request())
 
@@ -57,7 +98,7 @@ class TestGenerateBatchEndpoint:
         bad_req = valid_request()
         # Remove name entirely to trigger Pydantic missing field error
         del bad_req["child"]["name"]
-        
+
         response = client.post("/api/v1/scenarios/generate-batch", json=bad_req)
         assert response.status_code == 422
 
@@ -108,13 +149,17 @@ class TestGenerateStreamEndpoint:
         async def mock_stream_call(*args, **kwargs):
             return mock_async_gen()
 
-        mock_genai_client.aio.models.generate_content_stream.side_effect = mock_stream_call
+        mock_genai_client.aio.models.generate_content_stream.side_effect = (
+            mock_stream_call
+        )
 
-        response = client.post("/api/v1/scenarios/generate-stream", json=valid_request())
+        response = client.post(
+            "/api/v1/scenarios/generate-stream", json=valid_request()
+        )
 
         assert response.status_code == 200
         assert response.headers["content-type"].startswith("text/event-stream")
-        
+
         content = response.text
         assert "event: scenario" in content
         assert "event: done" in content
@@ -122,8 +167,12 @@ class TestGenerateStreamEndpoint:
     @patch("app.services.llm_service.client")
     def test_stream_error(self, mock_genai_client, client, valid_request):
         """Test streaming error handling."""
-        mock_genai_client.aio.models.generate_content_stream.side_effect = Exception("API fail")
-        response = client.post("/api/v1/scenarios/generate-stream", json=valid_request())
+        mock_genai_client.aio.models.generate_content_stream.side_effect = Exception(
+            "API fail"
+        )
+        response = client.post(
+            "/api/v1/scenarios/generate-stream", json=valid_request()
+        )
         assert "event: error" in response.text
 
 

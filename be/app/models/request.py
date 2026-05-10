@@ -15,7 +15,9 @@ class GenerateConfig(BaseModel):
     """Configuration for scenario generation."""
 
     total: int = Field(..., ge=1, le=10, description="Số câu hỏi muốn sinh, tối đa 10")
-    difficulty: int = Field(..., ge=1, description="Độ khó, 1 đến MAX_DIFFICULTY (cấu hình)")
+    difficulty: int = Field(
+        ..., ge=1, description="Độ khó, 1 đến MAX_DIFFICULTY (cấu hình)"
+    )
 
 
 class GenerateBatchRequest(BaseModel):

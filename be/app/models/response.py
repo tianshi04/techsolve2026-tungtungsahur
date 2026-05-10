@@ -5,7 +5,9 @@ class Choice(BaseModel):
     """A single answer choice for a scenario."""
 
     text: str = Field(..., description="Nội dung lựa chọn")
-    status: str = Field(..., description="Trạng thái: Nguy hiểm, Rất tốt, Tệ, Tốt, etc.")
+    status: str = Field(
+        ..., description="Trạng thái: Nguy hiểm, Rất tốt, Tệ, Tốt, etc."
+    )
     explain: str = Field(..., description="Giải thích lý do")
     score: int = Field(..., ge=0, le=10, description="Điểm cho lựa chọn, 0-10")
 

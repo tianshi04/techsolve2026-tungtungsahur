@@ -1,10 +1,11 @@
 import pytest
 from pydantic import ValidationError
 from app.models.request import ChildInfo, GenerateConfig, GenerateBatchRequest
-from app.models.response import Choice, Scenario, GenerateBatchResponse, Choices
+from app.models.response import Choice, Scenario, Choices
 
 
 # --- Request Models ---
+
 
 class TestChildInfo:
     def test_valid(self, sample_child_info):
@@ -44,9 +45,15 @@ class TestGenerateBatchRequest:
 
 # --- Response Models ---
 
+
 class TestChoice:
     def test_valid(self):
-        choice = Choice(text="Gửi số điện thoại", status="Nguy hiểm", explain="Tiết lộ thông tin", score=0)
+        choice = Choice(
+            text="Gửi số điện thoại",
+            status="Nguy hiểm",
+            explain="Tiết lộ thông tin",
+            score=0,
+        )
         assert choice.score == 0
 
     def test_score_too_high(self):

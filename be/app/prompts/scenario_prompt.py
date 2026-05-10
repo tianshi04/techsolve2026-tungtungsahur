@@ -37,9 +37,9 @@ def build_user_message(
     max_difficulty: int,
 ) -> str:
     """Build the user message containing specific requirements for this generation."""
-    
+
     notes_text = f"\n- Thông tin bổ sung: {notes}" if notes else ""
-    
+
     return f"""Hãy tạo ra {total} tình huống cho trẻ sau:
 
 THÔNG TIN TRẺ:

@@ -9,7 +9,7 @@ from pydantic import BaseModel
 
 from app.config import settings
 from app.models.request import GenerateBatchRequest
-from app.models.response import GenerateBatchResponse, Scenario, Choice
+from app.models.response import GenerateBatchResponse, Scenario
 from app.prompts.scenario_prompt import SYSTEM_PROMPT, build_user_message
 
 logger = logging.getLogger(__name__)
@@ -22,6 +22,7 @@ MAX_RETRIES = 2
 
 class ScenariosOutput(BaseModel):
     """Schema for structured output from Gemini API."""
+
     scenarios: list[Scenario]
 
 
@@ -88,15 +89,15 @@ def find_matching_brace(s: str, start_idx: int) -> int:
         if escape:
             escape = False
             continue
-        if char == '\\':
+        if char == "\\":
             escape = True
             continue
         if char == '"':
-            if i > 0 and s[i - 1] == '\\':
+            if i > 0 and s[i - 1] == "\\":
                 # Check if the backslash itself is escaped
                 backslashes = 0
                 for j in range(i - 1, -1, -1):
-                    if s[j] == '\\':
+                    if s[j] == "\\":
                         backslashes += 1
                     else:
                         break
@@ -106,16 +107,18 @@ def find_matching_brace(s: str, start_idx: int) -> int:
             in_string = not in_string
             continue
         if not in_string:
-            if char == '{':
+            if char == "{":
                 count += 1
-            elif char == '}':
+            elif char == "}":
                 count -= 1
                 if count == 0:
                     return i
     return -1
 
 
-async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGenerator[str, None]:
+async def stream_generate_scenarios(
+    request: GenerateBatchRequest,
+) -> AsyncGenerator[str, None]:
     """Stream scenario generation from Gemini.
 
     Yields scenario objects as Server-Sent Events (SSE).
@@ -156,9 +159,9 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
 
                 # If we haven't found the start of the scenarios list yet
                 if not in_scenarios_list:
-                    if '"scenarios":' in buffer and '[' in buffer:
-                        start_of_list = buffer.find('[')
-                        buffer = buffer[start_of_list + 1:]
+                    if '"scenarios":' in buffer and "[" in buffer:
+                        start_of_list = buffer.find("[")
+                        buffer = buffer[start_of_list + 1 :]
                         in_scenarios_list = True
                     else:
                         # Haven't reached the list yet
@@ -166,7 +169,7 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
 
                 # Try to extract objects from the buffer
                 while True:
-                    start_idx = buffer.find('{')
+                    start_idx = buffer.find("{")
                     if start_idx == -1:
                         break
 
@@ -180,10 +183,10 @@ async def stream_generate_scenarios(request: GenerateBatchRequest) -> AsyncGener
                         obj = json.loads(obj_str)
                         # Yield in SSE format
                         yield f"event: scenario\ndata: {json.dumps(obj, ensure_ascii=False)}\n\n"
-                        
+
                         # Remove processed part and move on
-                        buffer = buffer[end_idx + 1:]
-                        buffer = buffer.lstrip(', \n\r\t')
+                        buffer = buffer[end_idx + 1 :]
+                        buffer = buffer.lstrip(", \n\r\t")
                     except json.JSONDecodeError:
                         # Not a full object yet, wait for more chunks
                         break
